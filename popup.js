@@ -5,7 +5,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const mensagem = document.getElementById('mensagem');
   const erro = document.getElementById('erro');
 
-  // Atualiza campos de matrícula conforme quantidade
+  // Salva progresso no localStorage
+  function salvarProgresso() {
+    const dados = {
+      qtd: qtdInput.value,
+      matriculas: []
+    };
+    const matriculasElems = container.querySelectorAll('.matricula');
+    const inicioElems = container.querySelectorAll('.inicio');
+    const fimElems = container.querySelectorAll('.fim');
+
+    matriculasElems.forEach((m, i) => {
+      dados.matriculas.push({
+        matricula: m.value,
+        inicio: inicioElems[i].value,
+        fim: fimElems[i].value
+      });
+    });
+
+    localStorage.setItem('progressoContracheque', JSON.stringify(dados));
+  }
+
+  // Carrega progresso salvo
+  function carregarProgresso() {
+    const dados = JSON.parse(localStorage.getItem('progressoContracheque'));
+    if (!dados) return;
+    qtdInput.value = dados.qtd || 1;
+    atualizarCampos();
+
+    if (dados.matriculas && dados.matriculas.length > 0) {
+      const matriculasElems = container.querySelectorAll('.matricula');
+      const inicioElems = container.querySelectorAll('.inicio');
+      const fimElems = container.querySelectorAll('.fim');
+
+      dados.matriculas.forEach((m, i) => {
+        if (matriculasElems[i]) matriculasElems[i].value = m.matricula;
+        if (inicioElems[i]) inicioElems[i].value = m.inicio;
+        if (fimElems[i]) fimElems[i].value = m.fim;
+      });
+    }
+  }
+
+  // Atualiza campos de matrícula
   function atualizarCampos() {
     container.innerHTML = '';
     const qtd = Number(qtdInput.value);
@@ -13,16 +54,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const div = document.createElement('div');
       div.innerHTML = `
         <h4>Matrícula ${i}</h4>
-        <input type="text" class="matricula" placeholder="Matrícula (números)">
-        <input type="text" class="inicio" placeholder="Período Inicial (MM/AAAA)">
-        <input type="text" class="fim" placeholder="Período Final (MM/AAAA)">
+        <input type="text" class="matricula" placeholder="Matrícula (8 dígitos)" maxlength="8">
+        <input type="text" class="inicio" placeholder="Período Inicial (MM/AAAA)" maxlength="7">
+        <input type="text" class="fim" placeholder="Período Final (MM/AAAA)" maxlength="7">
       `;
       container.appendChild(div);
     }
   }
 
-  qtdInput.addEventListener('change', atualizarCampos);
-  atualizarCampos();
+  qtdInput.addEventListener('change', () => {
+    atualizarCampos();
+    salvarProgresso();
+  });
+
+  container.addEventListener('input', salvarProgresso);
+
+  carregarProgresso();
 
   // Função para parsear período
   function parsePeriodo(str) {
@@ -30,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return { mes, ano };
   }
 
-  // Função gerar períodos
+  // Gera períodos entre início e fim
   function gerarPeriodos(inicio, fim) {
     const periodos = [];
     for (let ano = inicio.ano; ano <= fim.ano; ano++) {
@@ -43,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return periodos;
   }
 
-  // Função baixar PDF
+  // Função para baixar PDF
   async function baixarEPDF(url) {
     try {
       const res = await fetch(url);
@@ -52,6 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch {
       return null;
     }
+  }
+
+  // Validação de matrícula e período
+  function validarEntrada(matricula, periodo) {
+    if (!/^\d{8}$/.test(matricula)) return 'Matrícula deve ter 8 dígitos';
+    if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(periodo)) return 'Período deve estar no formato MM/AAAA';
+    return null;
   }
 
   // Evento do botão
@@ -74,8 +128,19 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       for (let i = 0; i < qtd; i++) {
         const matricula = matriculasElems[i].value.trim();
-        const inicio = parsePeriodo(inicioElems[i].value.trim());
-        const fim = parsePeriodo(fimElems[i].value.trim());
+        const inicioStr = inicioElems[i].value.trim();
+        const fimStr = fimElems[i].value.trim();
+
+        // Validação
+        let erroMatricula = validarEntrada(matricula, '01/2000'); // só pra usar regex matrícula
+        if (erroMatricula) throw new Error(`Erro na matrícula ${i+1}: ${erroMatricula}`);
+        let erroInicio = validarEntrada('12345678', inicioStr);
+        if (erroInicio) throw new Error(`Erro na matrícula ${i+1}: ${erroInicio}`);
+        let erroFim = validarEntrada('12345678', fimStr);
+        if (erroFim) throw new Error(`Erro na matrícula ${i+1}: ${erroFim}`);
+
+        const inicio = parsePeriodo(inicioStr);
+        const fim = parsePeriodo(fimStr);
 
         const pdfFinal = await PDFDocument.create();
         const periodos = gerarPeriodos(inicio, fim);
