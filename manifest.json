@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Baixar Contracheque",
+  "version": "1.0",
+  "description": "Baixa PDFs de contracheques",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/contracheque.png",
+      "48": "icons/contracheque.png",
+      "128": "icons/contracheque.png"
+    }
+  },
+  "permissions": [
+    "downloads",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://rhbahia.ba.gov.br/*"
+  ]
+}

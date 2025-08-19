@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Baixar Contracheques</title>
+  <style>
+    body { font-family: Arial, sans-serif; width: 300px; padding: 10px; }
+    input, select, button { width: 100%; margin: 5px 0; padding: 5px; }
+    .hidden { display: none; }
+    #mensagem { margin-top: 10px; color: green; }
+    #erro { margin-top: 10px; color: red; }
+  </style>
+</head>
+<body>
+  <h3>Baixar Contracheques</h3>
+  
+  <label for="qtdMatriculas">Quantidade de Matrículas:</label>
+  <input type="number" id="qtdMatriculas" min="1" value="1">
+
+  <div id="matriculasContainer">
+    <!-- Matrículas serão adicionadas dinamicamente -->
+  </div>
+
+  <label for="tipo">Tipo de Contracheque:</label>
+  <select id="tipo">
+    <option value="1">Meses de Jan a Dez</option>
+    <option value="2">Meses Jan a Dez + Adicionais</option>
+    <option value="3">Apenas Adicionais</option>
+  </select>
+
+  <button id="baixar">Baixar PDFs</button>
+
+  <div id="mensagem" class="hidden"></div>
+  <div id="erro" class="hidden"></div>
+
+  <script src="pdf-lib.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
