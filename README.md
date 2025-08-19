@@ -16,7 +16,7 @@ Extensão do Google Chrome para **baixar contracheques de forma prática e autom
 - **Consolidação** de todos os PDFs em um único arquivo por matrícula.
 - **Validação automática** de matrícula (8 dígitos) e período (`MM/AAAA`).
 - **Salvamento automático do progresso**, evitando perda de dados ao minimizar ou fechar o popup.
-- **Indicador visual** de site ativo (verde se estiver no RH Bahia, vermelho caso contrário).
+- **Indicador visual** de site ativo (verde se estiver no site de contracheque, vermelho caso contrário).
 - **Botão para adicionar ou remover matrículas** de forma rápida.
 - **Barra de progresso animada** durante o download.
 
