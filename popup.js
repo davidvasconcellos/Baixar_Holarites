@@ -18,24 +18,22 @@ document.addEventListener('DOMContentLoaded', () => {
   indicador.style.zIndex = '1000';
   document.body.appendChild(indicador);
 
-  // Função para atualizar a cor do indicador
   function atualizarIndicador(ativa) {
     indicador.style.backgroundColor = ativa ? '#34e11a' : '#f70000';
   }
 
-  // Verificar a aba ativa e enviar mensagem para content.js
+  // Verificar site via content.js
   chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     chrome.tabs.sendMessage(tabs[0].id, "verificarURL", response => {
       if (response && typeof response.ativa !== 'undefined') {
         atualizarIndicador(response.ativa);
       } else {
-        // Caso não consiga se comunicar com content.js
         atualizarIndicador(false);
       }
     });
   });
 
-  // Salvar progresso no localStorage
+  // Salvar progresso
   function salvarProgresso() {
     const dados = [];
     const blocos = container.querySelectorAll('.matricula-box');
@@ -79,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   addBtn.addEventListener('click', () => criarBloco());
 
-  // Função para parsear período
+  // Parse período
   function parsePeriodo(str) {
     const [mes, ano] = str.split('/').map(Number);
     return { mes, ano };
@@ -98,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return periodos;
   }
 
-  // Função para baixar PDF
+  // Baixar PDF
   async function baixarEPDF(url) {
     try {
       const res = await fetch(url);
@@ -116,15 +114,20 @@ document.addEventListener('DOMContentLoaded', () => {
     return null;
   }
 
-  // Evento de download
+  // Download PDFs
   baixarBtn.addEventListener('click', async () => {
+    if (baixarBtn.disabled) return; // evita duplo clique
+    baixarBtn.disabled = true;
     mensagem.classList.add('hidden');
     erro.classList.add('hidden');
+    progresso.style.width = '0%';
+    progresso.style.opacity = '1';
 
     const blocos = container.querySelectorAll('.matricula-box');
     if (blocos.length === 0) {
       erro.textContent = 'Adicione pelo menos uma matrícula';
       erro.classList.remove('hidden');
+      baixarBtn.disabled = false;
       return;
     }
 
@@ -135,11 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const { PDFDocument } = window.PDFLib;
 
-    // Desabilita botão e mostra barra
-    baixarBtn.disabled = true;
-    progresso.style.width = '0%';
-    progresso.style.opacity = '1';
-
     try {
       for (let i = 0; i < blocos.length; i++) {
         const bloco = blocos[i];
@@ -147,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const inicioStr = bloco.querySelector('.inicio').value.trim();
         const fimStr = bloco.querySelector('.fim').value.trim();
 
-        // Valida
         let erroMatricula = validarEntrada(matricula, '01/2000');
         if (erroMatricula) throw new Error(`Erro na matrícula ${i + 1}: ${erroMatricula}`);
         let erroInicio = validarEntrada('12345678', inicioStr);
@@ -157,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const inicio = parsePeriodo(inicioStr);
         const fim = parsePeriodo(fimStr);
-
         const pdfFinal = await PDFDocument.create();
         const periodos = gerarPeriodos(inicio, fim);
         const downloads = [];
@@ -187,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
         link.download = `contracheques-${matricula}.pdf`;
         link.click();
 
-        // Atualiza barra animada
         progresso.style.width = `${((i + 1) / blocos.length) * 100}%`;
       }
 

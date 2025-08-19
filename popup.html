@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <title>Baixar Contracheques</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,6 +18,8 @@
       background-color: #f5f6fa;
       color: #2f3640;
       position: relative;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      /* sombra suave */
     }
 
     h3 {
@@ -27,7 +34,9 @@
       display: block;
     }
 
-    input, select, button {
+    input,
+    select,
+    button {
       width: 100%;
       padding: 8px 10px;
       margin-top: 5px;
@@ -37,7 +46,8 @@
       font-size: 14px;
     }
 
-    input:focus, select:focus {
+    input:focus,
+    select:focus {
       outline: none;
       border-color: #4cd137;
       box-shadow: 0 0 5px rgba(76, 209, 55, 0.5);
@@ -54,6 +64,13 @@
 
     button:hover {
       background-color: #40739e;
+    }
+
+    button:disabled {
+      background-color: #7f8c8d;
+      /* cinza */
+      cursor: not-allowed;
+      opacity: 0.6;
     }
 
     #addMatricula {
@@ -110,6 +127,7 @@
     }
   </style>
 </head>
+
 <body>
   <h3>BAIXAR CONTRACHEQUES</h3>
 
@@ -119,9 +137,9 @@
 
   <label for="tipo">Tipo de Contracheque:</label>
   <select id="tipo">
-    <option value="1">Apenas meses de Jan a Dez</option>
-    <option value="2">Meses Jan a Dez + Adicionais</option>
-    <option value="3">Apenas Adicionais</option>
+    <option value="1">Meses regulares (Janeiro a Dezembro)</option>
+    <option value="2">Meses regulares + adicionais (13º salário, férias, prêmios, etc.)</option>
+    <option value="3">Somente contracheques adicionais (13º salário, férias, prêmios, etc.)</option>
   </select>
 
   <button id="baixar">Baixar Contracheques</button>
@@ -133,4 +151,5 @@
   <script src="pdf-lib.min.js"></script>
   <script src="popup.js"></script>
 </body>
+
 </html>
