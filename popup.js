@@ -1,75 +1,83 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const qtdInput = document.getElementById('qtdMatriculas');
   const container = document.getElementById('matriculasContainer');
   const baixarBtn = document.getElementById('baixar');
   const mensagem = document.getElementById('mensagem');
   const erro = document.getElementById('erro');
+  const tipoSelect = document.getElementById('tipo');
+  const addBtn = document.getElementById('addMatricula');
+  const progresso = document.getElementById('progresso');
 
-  // Salva progresso no localStorage
-  function salvarProgresso() {
-    const dados = {
-      qtd: qtdInput.value,
-      matriculas: []
-    };
-    const matriculasElems = container.querySelectorAll('.matricula');
-    const inicioElems = container.querySelectorAll('.inicio');
-    const fimElems = container.querySelectorAll('.fim');
+  // Indicador de site
+  const indicador = document.createElement('div');
+  indicador.style.width = '15px';
+  indicador.style.height = '15px';
+  indicador.style.borderRadius = '50%';
+  indicador.style.position = 'fixed';
+  indicador.style.top = '10px';
+  indicador.style.right = '10px';
+  indicador.style.zIndex = '1000';
+  document.body.appendChild(indicador);
 
-    matriculasElems.forEach((m, i) => {
-      dados.matriculas.push({
-        matricula: m.value,
-        inicio: inicioElems[i].value,
-        fim: fimElems[i].value
-      });
+  // Função para atualizar a cor do indicador
+  function atualizarIndicador(ativa) {
+    indicador.style.backgroundColor = ativa ? '#34e11a' : '#f70000';
+  }
+
+  // Verificar a aba ativa e enviar mensagem para content.js
+  chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+    chrome.tabs.sendMessage(tabs[0].id, "verificarURL", response => {
+      if (response && typeof response.ativa !== 'undefined') {
+        atualizarIndicador(response.ativa);
+      } else {
+        // Caso não consiga se comunicar com content.js
+        atualizarIndicador(false);
+      }
     });
+  });
 
+  // Salvar progresso no localStorage
+  function salvarProgresso() {
+    const dados = [];
+    const blocos = container.querySelectorAll('.matricula-box');
+    blocos.forEach(bloco => {
+      const matricula = bloco.querySelector('.matricula').value;
+      const inicio = bloco.querySelector('.inicio').value;
+      const fim = bloco.querySelector('.fim').value;
+      dados.push({ matricula, inicio, fim });
+    });
     localStorage.setItem('progressoContracheque', JSON.stringify(dados));
   }
 
-  // Carrega progresso salvo
+  // Carregar progresso
   function carregarProgresso() {
     const dados = JSON.parse(localStorage.getItem('progressoContracheque'));
     if (!dados) return;
-    qtdInput.value = dados.qtd || 1;
-    atualizarCampos();
-
-    if (dados.matriculas && dados.matriculas.length > 0) {
-      const matriculasElems = container.querySelectorAll('.matricula');
-      const inicioElems = container.querySelectorAll('.inicio');
-      const fimElems = container.querySelectorAll('.fim');
-
-      dados.matriculas.forEach((m, i) => {
-        if (matriculasElems[i]) matriculasElems[i].value = m.matricula;
-        if (inicioElems[i]) inicioElems[i].value = m.inicio;
-        if (fimElems[i]) fimElems[i].value = m.fim;
-      });
-    }
+    dados.forEach(item => criarBloco(item.matricula, item.inicio, item.fim));
   }
 
-  // Atualiza campos de matrícula
-  function atualizarCampos() {
-    container.innerHTML = '';
-    const qtd = Number(qtdInput.value);
-    for (let i = 1; i <= qtd; i++) {
-      const div = document.createElement('div');
-      div.innerHTML = `
-        <h4>Matrícula ${i}</h4>
-        <input type="text" class="matricula" placeholder="Matrícula (8 dígitos)" maxlength="8">
-        <input type="text" class="inicio" placeholder="Período Inicial (MM/AAAA)" maxlength="7">
-        <input type="text" class="fim" placeholder="Período Final (MM/AAAA)" maxlength="7">
-      `;
-      container.appendChild(div);
-    }
+  // Criar bloco de matrícula
+  function criarBloco(matriculaVal = '', inicioVal = '', fimVal = '') {
+    const div = document.createElement('div');
+    div.className = 'matricula-box';
+    div.innerHTML = `
+      <input type="text" class="matricula" placeholder="Matrícula (8 dígitos)" maxlength="8" value="${matriculaVal}">
+      <input type="text" class="inicio" placeholder="Período Inicial (MM/AAAA)" maxlength="7" value="${inicioVal}">
+      <input type="text" class="fim" placeholder="Período Final (MM/AAAA)" maxlength="7" value="${fimVal}">
+      <button class="remove">Remover</button>
+    `;
+    container.appendChild(div);
+
+    div.querySelector('.remove').addEventListener('click', () => {
+      div.remove();
+      salvarProgresso();
+    });
+
+    div.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', salvarProgresso);
+    });
   }
 
-  qtdInput.addEventListener('change', () => {
-    atualizarCampos();
-    salvarProgresso();
-  });
-
-  container.addEventListener('input', salvarProgresso);
-
-  carregarProgresso();
+  addBtn.addEventListener('click', () => criarBloco());
 
   // Função para parsear período
   function parsePeriodo(str) {
@@ -101,43 +109,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Validação de matrícula e período
+  // Validação
   function validarEntrada(matricula, periodo) {
     if (!/^\d{8}$/.test(matricula)) return 'Matrícula deve ter 8 dígitos';
     if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(periodo)) return 'Período deve estar no formato MM/AAAA';
     return null;
   }
 
-  // Evento do botão
+  // Evento de download
   baixarBtn.addEventListener('click', async () => {
     mensagem.classList.add('hidden');
     erro.classList.add('hidden');
-    const qtd = Number(qtdInput.value);
-    const matriculasElems = container.querySelectorAll('.matricula');
-    const inicioElems = container.querySelectorAll('.inicio');
-    const fimElems = container.querySelectorAll('.fim');
-    const tipoEscolha = document.getElementById('tipo').value;
+
+    const blocos = container.querySelectorAll('.matricula-box');
+    if (blocos.length === 0) {
+      erro.textContent = 'Adicione pelo menos uma matrícula';
+      erro.classList.remove('hidden');
+      return;
+    }
 
     let tipos = [];
-    if (tipoEscolha === '1') tipos = ['1'];
-    else if (tipoEscolha === '2') tipos = ['1','ZADC','ZPDP','131P','1313'];
-    else if (tipoEscolha === '3') tipos = ['ZADC','ZPDP','131P','1313'];
+    if (tipoSelect.value === '1') tipos = ['1'];
+    else if (tipoSelect.value === '2') tipos = ['1', 'ZADC', 'ZPDP', '131P', '1313'];
+    else if (tipoSelect.value === '3') tipos = ['ZADC', 'ZPDP', '131P', '1313'];
 
     const { PDFDocument } = window.PDFLib;
 
-    try {
-      for (let i = 0; i < qtd; i++) {
-        const matricula = matriculasElems[i].value.trim();
-        const inicioStr = inicioElems[i].value.trim();
-        const fimStr = fimElems[i].value.trim();
+    // Desabilita botão e mostra barra
+    baixarBtn.disabled = true;
+    progresso.style.width = '0%';
+    progresso.style.opacity = '1';
 
-        // Validação
-        let erroMatricula = validarEntrada(matricula, '01/2000'); // só pra usar regex matrícula
-        if (erroMatricula) throw new Error(`Erro na matrícula ${i+1}: ${erroMatricula}`);
+    try {
+      for (let i = 0; i < blocos.length; i++) {
+        const bloco = blocos[i];
+        const matricula = bloco.querySelector('.matricula').value.trim();
+        const inicioStr = bloco.querySelector('.inicio').value.trim();
+        const fimStr = bloco.querySelector('.fim').value.trim();
+
+        // Valida
+        let erroMatricula = validarEntrada(matricula, '01/2000');
+        if (erroMatricula) throw new Error(`Erro na matrícula ${i + 1}: ${erroMatricula}`);
         let erroInicio = validarEntrada('12345678', inicioStr);
-        if (erroInicio) throw new Error(`Erro na matrícula ${i+1}: ${erroInicio}`);
+        if (erroInicio) throw new Error(`Erro na matrícula ${i + 1}: ${erroInicio}`);
         let erroFim = validarEntrada('12345678', fimStr);
-        if (erroFim) throw new Error(`Erro na matrícula ${i+1}: ${erroFim}`);
+        if (erroFim) throw new Error(`Erro na matrícula ${i + 1}: ${erroFim}`);
 
         const inicio = parsePeriodo(inicioStr);
         const fim = parsePeriodo(fimStr);
@@ -156,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const resultados = await Promise.all(downloads.map(d => d.promise));
 
         for (let j = 0; j < resultados.length; j++) {
-          const { mes, ano, tipo } = downloads[j];
           const pdfBytes = resultados[j];
           if (!pdfBytes || pdfBytes.byteLength === 0) continue;
 
@@ -171,12 +186,21 @@ document.addEventListener('DOMContentLoaded', () => {
         link.href = URL.createObjectURL(blob);
         link.download = `contracheques-${matricula}.pdf`;
         link.click();
+
+        // Atualiza barra animada
+        progresso.style.width = `${((i + 1) / blocos.length) * 100}%`;
       }
+
       mensagem.textContent = 'Todos os PDFs finalizados com sucesso!';
       mensagem.classList.remove('hidden');
     } catch (e) {
       erro.textContent = 'Ocorreu um erro: ' + (e.message || e);
       erro.classList.remove('hidden');
+    } finally {
+      baixarBtn.disabled = false;
+      setTimeout(() => { progresso.style.opacity = '0'; }, 1000);
     }
   });
+
+  carregarProgresso();
 });

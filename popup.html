@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <title>Baixar Contracheques</title>
   <style>
-    /* Reset básico */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      width: 350px;
+      width: 380px;
       padding: 20px;
       background-color: #f5f6fa;
       color: #2f3640;
+      position: relative;
     }
 
     h3 {
@@ -56,11 +56,35 @@
       background-color: #40739e;
     }
 
+    #addMatricula {
+      background-color: #44bd32;
+      margin-bottom: 15px;
+    }
+
+    #addMatricula:hover {
+      background-color: #4cd137;
+    }
+
     .matricula-box {
       padding: 10px;
       margin-bottom: 10px;
       background-color: #dcdde1;
       border-radius: 6px;
+      position: relative;
+    }
+
+    .matricula-box button.remove {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: auto;
+      padding: 2px 6px;
+      background-color: #e84118;
+      font-size: 12px;
+    }
+
+    .matricula-box button.remove:hover {
+      background-color: #f70000;
     }
 
     #mensagem {
@@ -74,17 +98,24 @@
       color: #e84118;
       font-weight: bold;
     }
+
+    #progresso {
+      height: 6px;
+      background: #487eb0;
+      width: 0%;
+      border-radius: 3px;
+      transition: width 0.3s;
+      margin-top: 10px;
+      opacity: 0;
+    }
   </style>
 </head>
 <body>
   <h3>BAIXAR CONTRACHEQUES</h3>
-  
-  <label for="qtdMatriculas">Quantidade de Matrículas:</label>
-  <input type="number" id="qtdMatriculas" min="1" value="1">
 
-  <div id="matriculasContainer">
-    <!-- Matrículas serão adicionadas dinamicamente -->
-  </div>
+  <button id="addMatricula">Adicionar Matrícula</button>
+
+  <div id="matriculasContainer"></div>
 
   <label for="tipo">Tipo de Contracheque:</label>
   <select id="tipo">
@@ -95,6 +126,7 @@
 
   <button id="baixar">Baixar Contracheques</button>
 
+  <div id="progresso"></div>
   <div id="mensagem" class="hidden"></div>
   <div id="erro" class="hidden"></div>
 

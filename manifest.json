@@ -1,19 +1,25 @@
 {
   "manifest_version": 3,
-  "name": "Baixar Contracheque",
-  "version": "1.0",
-  "description": "Baixa PDFs de contracheques",
+  "name": "Baixar Contracheques RH Bahia",
+  "description": "Extensão para baixar contracheques com agrupamento automático de PDF.",
+  "version": "2.0.1",
+  "icons": {
+    "128": "contracheque.png"
+  },
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "128": "contracheque.png"
-    }
+    "default_popup": "popup.html"
   },
   "permissions": [
-    "downloads",
-    "scripting"
+    "activeTab",
+    "storage"
   ],
   "host_permissions": [
     "https://rhbahia.ba.gov.br/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
   ]
 }
