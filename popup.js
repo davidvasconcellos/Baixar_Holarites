@@ -86,9 +86,28 @@ document.addEventListener('DOMContentLoaded', () => {
         salvarProgresso();
       });
     });
+    
+    // seleciona os inputs
+    const inicioInput = div.querySelector('.inicio');
+    const fimInput = div.querySelector('.fim');
+
+    // aplica formatação automática
+    formatarPeriodo(inicioInput);
+    formatarPeriodo(fimInput);
 
     div.querySelectorAll('input').forEach(input => {
       input.addEventListener('input', salvarProgresso);
+    });
+  }
+
+  // ADICIONAR AQUI: Formata o período automaticamente com "/"
+  function formatarPeriodo(input) {
+    input.addEventListener('input', () => {
+      let valor = input.value.replace(/\D/g, ''); // remove tudo que não for número
+      if (valor.length > 2) {
+        valor = valor.slice(0, 2) + '/' + valor.slice(2, 6);
+      }
+      input.value = valor;
     });
   }
 
