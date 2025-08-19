@@ -6,6 +6,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const tipoSelect = document.getElementById('tipo');
   const addBtn = document.getElementById('addMatricula');
   const progresso = document.getElementById('progresso');
+  const temaToggle = document.getElementById('temaToggle');
+
+  // Inicializa ícone conforme tema salvo
+  if (localStorage.getItem('tema') === 'dark') {
+    document.body.classList.add('dark');
+    temaToggle.textContent = '☀️';
+  } else {
+    temaToggle.textContent = '🌙';
+  }
+
+  // Alternar tema ao clicar
+  temaToggle.addEventListener('click', () => {
+    const escuro = document.body.classList.toggle('dark');
+    localStorage.setItem('tema', escuro ? 'dark' : 'light');
+    temaToggle.textContent = escuro ? '☀️' : '🌙';
+  });
 
   // Indicador de site
   const indicador = document.createElement('div');
@@ -14,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   indicador.style.borderRadius = '50%';
   indicador.style.position = 'fixed';
   indicador.style.top = '10px';
-  indicador.style.right = '10px';
+  indicador.style.left = '10px';
   indicador.style.zIndex = '1000';
   document.body.appendChild(indicador);
 
@@ -22,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
     indicador.style.backgroundColor = ativa ? '#34e11a' : '#f70000';
   }
 
-  // Verificar site via content.js
   chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     chrome.tabs.sendMessage(tabs[0].id, "verificarURL", response => {
       if (response && typeof response.ativa !== 'undefined') {
@@ -33,20 +48,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Salvar progresso
+  // Salvar e carregar progresso
   function salvarProgresso() {
     const dados = [];
-    const blocos = container.querySelectorAll('.matricula-box');
-    blocos.forEach(bloco => {
-      const matricula = bloco.querySelector('.matricula').value;
-      const inicio = bloco.querySelector('.inicio').value;
-      const fim = bloco.querySelector('.fim').value;
-      dados.push({ matricula, inicio, fim });
+    container.querySelectorAll('.matricula-box').forEach(bloco => {
+      dados.push({
+        matricula: bloco.querySelector('.matricula').value,
+        inicio: bloco.querySelector('.inicio').value,
+        fim: bloco.querySelector('.fim').value
+      });
     });
     localStorage.setItem('progressoContracheque', JSON.stringify(dados));
   }
 
-  // Carregar progresso
   function carregarProgresso() {
     const dados = JSON.parse(localStorage.getItem('progressoContracheque'));
     if (!dados) return;
@@ -61,13 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
       <input type="text" class="matricula" placeholder="Matrícula (8 dígitos)" maxlength="8" value="${matriculaVal}">
       <input type="text" class="inicio" placeholder="Período Inicial (MM/AAAA)" maxlength="7" value="${inicioVal}">
       <input type="text" class="fim" placeholder="Período Final (MM/AAAA)" maxlength="7" value="${fimVal}">
-      <button class="remove">Remover</button>
+      <button class="remove">REMOVER</button>
     `;
     container.appendChild(div);
 
     div.querySelector('.remove').addEventListener('click', () => {
-      div.remove();
-      salvarProgresso();
+      div.classList.add('remover');
+      div.addEventListener('animationend', () => {
+        div.remove();
+        salvarProgresso();
+      });
     });
 
     div.querySelectorAll('input').forEach(input => {
@@ -77,13 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   addBtn.addEventListener('click', () => criarBloco());
 
-  // Parse período
+  // Funções auxiliares
   function parsePeriodo(str) {
     const [mes, ano] = str.split('/').map(Number);
     return { mes, ano };
   }
 
-  // Gera períodos entre início e fim
   function gerarPeriodos(inicio, fim) {
     const periodos = [];
     for (let ano = inicio.ano; ano <= fim.ano; ano++) {
@@ -96,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return periodos;
   }
 
-  // Baixar PDF
   async function baixarEPDF(url) {
     try {
       const res = await fetch(url);
@@ -107,27 +122,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Validação
   function validarEntrada(matricula, periodo) {
     if (!/^\d{8}$/.test(matricula)) return 'Matrícula deve ter 8 dígitos';
     if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(periodo)) return 'Período deve estar no formato MM/AAAA';
     return null;
   }
 
-  // Download PDFs
+  // Evento de download
   baixarBtn.addEventListener('click', async () => {
-    if (baixarBtn.disabled) return; // evita duplo clique
-    baixarBtn.disabled = true;
     mensagem.classList.add('hidden');
     erro.classList.add('hidden');
-    progresso.style.width = '0%';
-    progresso.style.opacity = '1';
 
     const blocos = container.querySelectorAll('.matricula-box');
     if (blocos.length === 0) {
       erro.textContent = 'Adicione pelo menos uma matrícula';
       erro.classList.remove('hidden');
-      baixarBtn.disabled = false;
       return;
     }
 
@@ -138,6 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const { PDFDocument } = window.PDFLib;
 
+    // Desabilita botão e mostra barra
+    baixarBtn.disabled = true;
+    progresso.style.width = '0%';
+    progresso.style.opacity = '1';
+
     try {
       for (let i = 0; i < blocos.length; i++) {
         const bloco = blocos[i];
@@ -145,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const inicioStr = bloco.querySelector('.inicio').value.trim();
         const fimStr = bloco.querySelector('.fim').value.trim();
 
+        // Valida entradas
         let erroMatricula = validarEntrada(matricula, '01/2000');
         if (erroMatricula) throw new Error(`Erro na matrícula ${i + 1}: ${erroMatricula}`);
         let erroInicio = validarEntrada('12345678', inicioStr);
@@ -154,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const inicio = parsePeriodo(inicioStr);
         const fim = parsePeriodo(fimStr);
+
         const pdfFinal = await PDFDocument.create();
         const periodos = gerarPeriodos(inicio, fim);
         const downloads = [];
@@ -192,8 +208,10 @@ document.addEventListener('DOMContentLoaded', () => {
       erro.textContent = 'Ocorreu um erro: ' + (e.message || e);
       erro.classList.remove('hidden');
     } finally {
-      baixarBtn.disabled = false;
-      setTimeout(() => { progresso.style.opacity = '0'; }, 1000);
+      setTimeout(() => {
+        baixarBtn.disabled = false;
+        progresso.style.opacity = '0';
+      }, 1000);
     }
   });
 

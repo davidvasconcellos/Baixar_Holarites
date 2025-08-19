@@ -15,17 +15,18 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       width: 380px;
       padding: 20px;
-      background-color: #f5f6fa;
-      color: #2f3640;
+      background-color: var(--bg-color, #f5f6fa);
+      color: var(--text-color, #2f3640);
       position: relative;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      /* sombra suave */
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.3s, color 0.3s;
     }
 
     h3 {
       text-align: center;
       margin-bottom: 15px;
-      color: #273c75;
+      color: var(--primary-color, #273c75);
     }
 
     label {
@@ -44,6 +45,7 @@
       border-radius: 6px;
       border: 1px solid #dcdde1;
       font-size: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
     }
 
     input:focus,
@@ -59,18 +61,17 @@
       font-weight: bold;
       border: none;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    button:hover {
+    button:hover:enabled {
       background-color: #40739e;
     }
 
     button:disabled {
-      background-color: #7f8c8d;
-      /* cinza */
+      background-color: #7f8fa6;
       cursor: not-allowed;
-      opacity: 0.6;
+      color: #dcdde1;
     }
 
     #addMatricula {
@@ -88,6 +89,27 @@
       background-color: #dcdde1;
       border-radius: 6px;
       position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.3s forwards;
+    }
+
+    .matricula-box.remover {
+      animation: fadeOutDown 0.3s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeOutDown {
+      to {
+        opacity: 0;
+        transform: translateY(20px);
+      }
     }
 
     .matricula-box button.remove {
@@ -121,9 +143,21 @@
       background: #487eb0;
       width: 0%;
       border-radius: 3px;
-      transition: width 0.3s;
+      transition: width 0.5s ease;
       margin-top: 10px;
       opacity: 0;
+    }
+
+    /* Tema escuro */
+    body.dark {
+      --bg-color: #2f3640;
+      --text-color: #f5f6fa;
+      --primary-color: #4cd137;
+    }
+
+    #temaToggle:hover {
+      opacity: 0.8;
+      transition: opacity 0.2s;
     }
   </style>
 </head>
@@ -131,18 +165,20 @@
 <body>
   <h3>BAIXAR CONTRACHEQUES</h3>
 
-  <button id="addMatricula">Adicionar Matrícula</button>
+  <div id="temaToggle" title="Alternar tema"
+    style="position: fixed; top: 10px; right: 15px; cursor: pointer; font-size: 16px; user-select: none;">🌙</div>
+  <button id="addMatricula">ADICIONAR MATRÍCULA</button>
 
   <div id="matriculasContainer"></div>
 
-  <label for="tipo">Tipo de Contracheque:</label>
+  <label for="tipo">TIPO DE CONTRACHEQUE:</label>
   <select id="tipo">
-    <option value="1">Meses regulares (Janeiro a Dezembro)</option>
-    <option value="2">Meses regulares + adicionais (13º salário, férias, prêmios, etc.)</option>
-    <option value="3">Somente contracheques adicionais (13º salário, férias, prêmios, etc.)</option>
+    <option value="1">Meses Regulares (Janeiro a Dezembro)</option>
+    <option value="2">Meses Regulares + adicionais (13º salário, férias, prêmios, etc.)</option>
+    <option value="3">Somente Adicionais (13°, férias, prêmios, etc.)</option>
   </select>
 
-  <button id="baixar">Baixar Contracheques</button>
+  <button id="baixar">BAIXAR CONTRACHEQUES</button>
 
   <div id="progresso"></div>
   <div id="mensagem" class="hidden"></div>

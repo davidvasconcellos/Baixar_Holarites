@@ -4,7 +4,7 @@
   "description": "Extensão para baixar contracheques com agrupamento automático de PDF.",
   "version": "2.0.1",
   "icons": {
-    "128": "contracheque.png"
+    "128": "icon1.png"
   },
   "action": {
     "default_popup": "popup.html"
