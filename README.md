@@ -9,11 +9,11 @@ Extensão do Google Chrome para baixar contracheques de forma prática e automat
 - Inserção de múltiplas matrículas.
 - Seleção de períodos de forma dinâmica (início e fim).
 - Tipos de contracheques:
-  1. Meses de janeiro a dezembro.
-  2. Meses de janeiro a dezembro + adicionais.
-  3. Apenas adicionais.
+  1. Meses de janeiro a dezembro (essa opção baixa apenas os contracheques dos respectivos meses, ignorando os demais como 13° salário, férias, prêmio, etc).
+  2. Meses de janeiro a dezembro + adicionais (essa opção baixa todos os tipos de contracheque mapeados; caso encontre algum ainda não mapeado, entrar em contato com o desenvolvedor).
+  3. Apenas adicionais (opção para baixar somente as folhas adicionais, como 13° salário, férias, prêmio, etc).
 - Download automático de PDFs.
-- Consolidação de todos os PDFs de cada matrícula em um único arquivo.
+- Consolidação de todos os PDFs de cada matrícula em um único arquivo por matrícula.
 - Validação de matrícula (apenas 8 dígitos) e período (formato `MM/AAAA`).
 - Salvamento do progresso no preenchimento para evitar perda de dados ao minimizar ou fechar o popup.
 
@@ -29,7 +29,7 @@ Extensão do Google Chrome para baixar contracheques de forma prática e automat
 5. Clique em **Carregar sem compactação**.
 6. Selecione a pasta baixada e descompactada (vide item 2).
 7. Ative a extensão e fixe-a na barra de favoritos.
-8. DESATIVE O MODO DO DESENVOLVEDOR.
+8. ******DESATIVE O MODO DO DESENVOLVEDOR******
 9. Abra o site de holerites, clique na extensão e preencha as informações que deseja.
 
 ---
