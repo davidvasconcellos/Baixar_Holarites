@@ -1,6 +1,6 @@
-# Extensão Baixar Contracheques - RH Bahia
+# Extensão Baixar Contracheques
 
-Extensão do Google Chrome para baixar contracheques de funcionários do RH Bahia de forma prática e automatizada. Permite selecionar múltiplas matrículas, períodos e tipos de contracheques, gerando um PDF final consolidado para cada matrícula.
+Extensão do Google Chrome para baixar contracheques de forma prática e automatizada. Permite selecionar múltiplas matrículas, períodos e tipos de contracheques, gerando um PDF final consolidado para cada matrícula.
 
 ---
 
