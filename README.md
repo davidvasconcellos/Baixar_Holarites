@@ -1,52 +1,58 @@
 # Extensão Baixar Contracheques
 
-Extensão do Google Chrome para baixar contracheques de forma prática e automatizada. Permite selecionar múltiplas matrículas, períodos e tipos de contracheques, gerando um PDF final consolidado para cada matrícula.
+Extensão do Google Chrome para **baixar contracheques de forma prática e automatizada**. Permite selecionar múltiplas matrículas, períodos e tipos de contracheques, gerando um **PDF final consolidado por matrícula**.
 
 ---
 
-## Funcionalidades
+## ✨ Funcionalidades
 
-- Inserção de múltiplas matrículas.
-- Seleção de períodos de forma dinâmica (início e fim).
+- Adicionar **múltiplas matrículas** facilmente.
+- Seleção de **períodos dinâmicos** (início e fim).
 - Tipos de contracheques:
-  1. Meses de janeiro a dezembro (essa opção baixa apenas os contracheques dos respectivos meses, ignorando os demais como 13° salário, férias, prêmio, etc).
-  2. Meses de janeiro a dezembro + adicionais (essa opção baixa todos os tipos de contracheque mapeados; caso encontre algum ainda não mapeado, entrar em contato com o desenvolvedor).
-  3. Apenas adicionais (opção para baixar somente as folhas adicionais, como 13° salário, férias, prêmio, etc).
-- Download automático de PDFs.
-- Consolidação de todos os PDFs de cada matrícula em um único arquivo por matrícula.
-- Validação de matrícula (apenas 8 dígitos) e período (formato `MM/AAAA`).
-- Salvamento do progresso no preenchimento para evitar perda de dados ao minimizar ou fechar o popup.
+  1. **Meses de Janeiro a Dezembro** – baixa apenas os contracheques mensais, ignorando 13° salário, férias, prêmio, etc.
+  2. **Meses de Janeiro a Dezembro + Adicionais** – baixa todos os tipos de contracheques mapeados; se algum não mapeado for encontrado, contate o desenvolvedor.
+  3. **Apenas Adicionais** – baixa somente folhas extras, como 13° salário, férias, prêmio, etc.
+- **Download automático de PDFs**.
+- **Consolidação** de todos os PDFs em um único arquivo por matrícula.
+- **Validação automática** de matrícula (8 dígitos) e período (`MM/AAAA`).
+- **Salvamento automático do progresso**, evitando perda de dados ao minimizar ou fechar o popup.
+- **Indicador visual** de site ativo (verde se estiver no RH Bahia, vermelho caso contrário).
+- **Botão para adicionar ou remover matrículas** de forma rápida.
+- **Barra de progresso animada** durante o download.
 
 ---
 
-## Instalação
+## 🚀 Instalação
 
-1. Baixe o repositório pelo link abaixo:  
+1. Baixe o repositório:  
    [Baixar como .zip](https://github.com/davidvasconcellos/Baixar_Holarites/archive/refs/heads/main.zip)
 2. Descompacte o arquivo `.zip`.
-3. Abra o Google Chrome e vá para **Extensões > Gerenciar extensões**.
-4. Ative o **Modo de desenvolvedor** no canto superior direito.
+3. Abra o Google Chrome e vá em **Extensões > Gerenciar extensões**.
+4. Ative o **Modo de Desenvolvedor** no canto superior direito.
 5. Clique em **Carregar sem compactação**.
-6. Selecione a pasta baixada e descompactada (vide item 2).
+6. Selecione a pasta descompactada.
 7. Ative a extensão e fixe-a na barra de favoritos.
-8. ******DESATIVE O MODO DO DESENVOLVEDOR******
-9. Abra o site de holerites, clique na extensão e preencha as informações que deseja.
+8. **DESATIVE o Modo de Desenvolvedor** após carregar.
+9. Abra o site de holerites, clique na extensão e preencha as informações.
 
 ---
 
-## Uso
+## 📝 Como Usar
 
 1. Clique no ícone da extensão.
-2. Insira a quantidade de matrículas e os dados de cada uma (matrícula, período inicial e final).
-3. Selecione o tipo de contracheques.
+2. Defina a quantidade de matrículas e insira os dados de cada uma:
+   - Matrícula (8 dígitos)
+   - Período inicial (`MM/AAAA`)
+   - Período final (`MM/AAAA`)
+3. Selecione o **tipo de contracheque**.
 4. Clique em **Baixar PDFs**.
-5. Aguarde a finalização. Cada matrícula terá um PDF consolidado gerado.
+5. Aguarde a conclusão. Cada matrícula terá um **PDF consolidado**.
 
 ---
 
-## Licença
+## 📄 Licença
 
-© 2025 David Vasconcellos. Todos os direitos reservados. 
-Permissão de uso apenas. Não é permitido modificar ou redistribuir este código sem autorização do autor.
+© 2025 David Vasconcellos. Todos os direitos reservados.  
+Permissão apenas para uso pessoal. **Não é permitido modificar ou redistribuir** este código sem autorização do autor.
 
-Versão 2.0.1 – 19/08/2025
+**Versão:** 2.0.1 – 19/08/2025
