@@ -19,6 +19,7 @@ Extensão do Google Chrome para **baixar contracheques de forma prática e autom
 - **Indicador visual** de site ativo (verde se estiver no site de contracheque, vermelho caso contrário).
 - **Botão para adicionar ou remover matrículas** de forma rápida.
 - **Barra de progresso animada** durante o download.
+- **Modo Escuro/Claro** para melhorar a interação do usuário final.
 
 ---
 
