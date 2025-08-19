@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Baixar Contracheques RH Bahia",
+  "name": "Baixar Contracheques",
   "description": "Extensão para baixar contracheques com agrupamento automático de PDF.",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "icons": {
     "128": "icon1.png"
   },

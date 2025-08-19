@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         salvarProgresso();
       });
     });
-    
+
     // seleciona os inputs
     const inicioInput = div.querySelector('.inicio');
     const fimInput = div.querySelector('.fim');
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ADICIONAR AQUI: Formata o período automaticamente com "/"
+  //Função para formata o período automaticamente com "/"
   function formatarPeriodo(input) {
     input.addEventListener('input', () => {
       let valor = input.value.replace(/\D/g, ''); // remove tudo que não for número
