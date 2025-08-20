@@ -35,8 +35,8 @@ Extensão do Google Chrome para **baixar contracheques de forma prática e autom
 7. Ative a extensão e fixe-a na barra de favoritos.
 8. **DESATIVE o Modo de Desenvolvedor** após carregar.
 9. Abra o site de holerites, clique na extensão e preencha as informações.
+> ⚠️ **IMPORTANTE:** NÃO APAGUE e NÃO MUDE DE LOCAL a pasta descompactada baixada no tópico 1 e movida conforme o tópico 2 (se a pasta for movida ou excluída após a instalação indicada no tópico 5 e 6, a extensão deixará de funcionar, sendo necessária uma reinstalação).
 
-**OBS.: NÃO APAGUE** e **NÃO MUDE DE LOCAL** a pasta descompactada baixada no tópico 1 e movida conforme o tópico 2.
 ---
 
 ## 📝 Como Usar
