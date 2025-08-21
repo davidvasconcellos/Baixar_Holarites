@@ -1,3 +1,9 @@
+/*!
+ * Autor: David Vasconcellos
+ * Email: davidvasconcellos16@gmail.com
+ * Direitos autorais reservados - 2025
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('matriculasContainer');
   const baixarBtn = document.getElementById('baixar');
