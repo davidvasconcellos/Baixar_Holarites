@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const clearAllBtn = document.getElementById('clearAllBtn');
   const progresso = document.getElementById('progresso');
   const temaToggle = document.getElementById('temaToggle');
+  const ausentesSalvos = JSON.parse(localStorage.getItem('ausentes')) || [];
+
+  // Mostrar alertas salvos
+  criarAlertas(ausentesSalvos);
 
   // Inicializa ícone conforme tema salvo
   if (localStorage.getItem('tema') === 'dark') {
@@ -55,6 +59,146 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Função para limpar alertas e mensagem de sucesso
+  function limparAlertasEMensagem() {
+    // Remove alertas e listas de períodos ausentes
+    localStorage.removeItem('ausentes');
+    document.querySelectorAll('.alerta-periodos, .lista-periodos').forEach(el => el.remove());
+
+    // Limpa a mensagem de sucesso
+    localStorage.removeItem('mensagemSucesso');
+    mensagem.textContent = ''; // <-- limpa o texto
+    mensagem.classList.add('hidden'); // <-- esconde a div
+  }
+
+  // Função para criar alertas persistentes
+  function criarAlertas(ausentes) {
+    // Remove alertas existentes
+    document.querySelectorAll('.alerta-periodos, .lista-periodos').forEach(e => e.remove());
+    if (!ausentes || ausentes.length === 0) return;
+
+    // Criar alerta principal
+    const alerta = document.createElement('div');
+    alerta.innerHTML = '⚠️ Períodos não encontrados <span style="font-size:0.8em; opacity:0.7;">(clique para detalhes)</span>';
+    alerta.className = 'alerta-periodos';
+    alerta.style.cursor = 'pointer';
+    alerta.style.padding = '10px 35px';
+    alerta.style.border = '1px solid #f5c542';
+    alerta.style.backgroundColor = '#fff3cd';
+    alerta.style.borderRadius = '8px';
+    alerta.style.display = 'inline-block';
+    alerta.style.transition = 'all 0.3s';
+    alerta.addEventListener('mouseover', () => alerta.style.backgroundColor = '#ffe8a1');
+    alerta.addEventListener('mouseout', () => alerta.style.backgroundColor = '#fff3cd');
+    document.body.insertBefore(alerta, document.getElementById('progresso').nextSibling);
+
+    // Criar lista detalhada
+    const lista = document.createElement('div');
+    lista.className = 'lista-periodos';
+    lista.style.display = 'none';
+    lista.style.backgroundColor = '#f8f9fa';
+    lista.style.border = '1px solid #dee2e6';
+    lista.style.borderRadius = '8px';
+    lista.style.padding = '10px 15px';
+    lista.style.marginTop = '5px';
+    lista.style.maxHeight = '300px';
+    lista.style.overflowY = 'auto';
+    lista.style.transition = 'all 0.3s';
+
+    const fechar = document.createElement('span');
+    fechar.textContent = '✖';
+    fechar.style.cursor = 'pointer';
+    fechar.style.float = 'right';
+    lista.appendChild(fechar);
+
+    const ul = document.createElement('ul');
+    ul.style = 'list-style:none; padding-left:5px; margin-top:15px;';
+
+    // Configuração de cores e ícones
+    const tiposConfig = {
+      'Normal': { color: '#007bff', icon: '📄' },
+      'Folha Adicional': { color: '#28a745', icon: '➕' },
+      'Prêmio': { color: '#ffc107', icon: '🏆', textColor: '#000' },
+      '1a. Parc. 13Sal.': { color: '#17a2b8', icon: '1️⃣' },
+      '2a. Parc. 13Sal.': { color: '#6f42c1', icon: '2️⃣' }
+    };
+
+    // Função para agrupar períodos contíguos
+    function agruparPeriodos(periodos) {
+      if (!periodos || periodos.length === 0) return [];
+      const ord = periodos.sort((a, b) => {
+        const [ma, aa] = a.split('/').map(Number);
+        const [mb, ab] = b.split('/').map(Number);
+        return aa === ab ? ma - mb : aa - ab;
+      });
+      const agrupados = [];
+      let inicio = ord[0], fim = ord[0];
+      for (let i = 1; i < ord.length; i++) {
+        const [mF, aF] = fim.split('/').map(Number);
+        const [mC, aC] = ord[i].split('/').map(Number);
+        if ((aC === aF && mC === mF + 1) || (aC === aF + 1 && mF === 12 && mC === 1)) {
+          fim = ord[i];
+        } else {
+          agrupados.push({ inicio, fim });
+          inicio = fim = ord[i];
+        }
+      }
+      agrupados.push({ inicio, fim });
+      return agrupados;
+    }
+
+    // Processar cada matrícula
+    const matriculasMap = {}; // agrupando por matrícula
+    ausentes.forEach(a => {
+      const match = a.match(/Matrícula: (\d+) \[Período ausente: ([0-9/]+)\] - (.+)/);
+      if (!match) return;
+      const [, matricula, periodo, tiposStr] = match;
+      if (!matriculasMap[matricula]) matriculasMap[matricula] = {};
+      const tipos = tiposStr.split(',').map(t => t.trim());
+      tipos.forEach(tipo => {
+        if (!matriculasMap[matricula][tipo]) matriculasMap[matricula][tipo] = [];
+        matriculasMap[matricula][tipo].push(periodo);
+      });
+    });
+
+    // Criar itens da lista
+    for (const matricula in matriculasMap) {
+      const liMat = document.createElement('li');
+      liMat.style.marginBottom = '8px';
+      liMat.innerHTML = `<strong>Matrícula:</strong> ${matricula}`;
+      const tiposDiv = document.createElement('div');
+      tiposDiv.style.marginTop = '3px';
+
+      for (const tipo in matriculasMap[matricula]) {
+        const periodos = agruparPeriodos(matriculasMap[matricula][tipo]);
+        periodos.forEach(p => {
+          const span = document.createElement('span');
+          span.style.backgroundColor = tiposConfig[tipo].color;
+          span.style.color = tiposConfig[tipo].textColor || '#fff';
+          span.style.padding = '3px 6px';
+          span.style.borderRadius = '4px';
+          span.style.display = 'inline-block';
+          span.style.marginRight = '5px';
+          span.style.marginTop = '3px';
+          span.textContent = `${tiposConfig[tipo].icon} ${tipo} [${p.inicio === p.fim ? p.inicio : p.inicio + '-' + p.fim}]`;
+          tiposDiv.appendChild(span);
+        });
+      }
+
+      liMat.appendChild(tiposDiv);
+      ul.appendChild(liMat);
+    }
+
+    lista.appendChild(ul);
+    document.body.insertBefore(lista, alerta.nextSibling);
+
+    // Eventos
+    alerta.addEventListener('click', () => {
+      lista.style.display = lista.style.display === 'none' ? 'block' : 'none';
+    });
+    fechar.addEventListener('click', () => lista.style.display = 'none');
+  }
+
   // Salvar e carregar progresso
   function salvarProgresso() {
     const dados = [];
@@ -87,10 +231,16 @@ document.addEventListener('DOMContentLoaded', () => {
     container.appendChild(div);
 
     div.querySelector('.remove').addEventListener('click', () => {
+      // Adiciona animação de remoção
       div.classList.add('remover');
+
       div.addEventListener('animationend', () => {
+        // Remove o bloco
         div.remove();
+        // Salva progresso atualizado
         salvarProgresso();
+        // Limpa alertas e mensagem de sucesso
+        limparAlertasEMensagem();
       });
     });
 
@@ -157,8 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function validarEntrada(matricula, periodo) {
-    if (!/^\d{8}$/.test(matricula)) return 'Matrícula deve ter 8 dígitos';
-    if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(periodo)) return 'Período deve estar no formato MM/AAAA';
+    if (!/^\d{8}$/.test(matricula)) return ' Matrícula deve ter 8 dígitos numéricos!';
+    if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(periodo)) return '📆 Período deve estar no formato MM/AAAA';
     return null;
   }
 
@@ -171,16 +321,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const blocos = container.querySelectorAll('.matricula-box');
     if (blocos.length === 0) {
-      erro.textContent = 'Adicione pelo menos uma matrícula';
+      erro.textContent = '🚨 Adicione pelo menos uma matrícula!';
       erro.classList.remove('hidden');
       return;
     }
 
     let tipos = [];
+    const nomesTipos = {
+      '1': 'Normal',
+      'ZADC': 'Folha Adicional',
+      'ZPDP': 'Prêmio',
+      '131P': '1a. Parc. 13Sal.',
+      '1313': '2a. Parc. 13Sal.'
+    };
     if (tipoSelect.value === '1') tipos = ['1'];
     else if (tipoSelect.value === '2') tipos = ['1', 'ZADC', 'ZPDP', '131P', '1313'];
     else if (tipoSelect.value === '3') tipos = ['ZADC', 'ZPDP', '131P', '1313'];
-
+    /* 
+    1 - Normal;
+    ZADC - Folha Adicional
+    ZPDP - Prêmio
+    131P - 1a. Parc. 13Sal.
+    1313 - 2a. Parc. 13Sal.
+    */
     const { PDFDocument } = window.PDFLib;
 
     // Desabilita botão e mostra barra
@@ -219,17 +382,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const resultados = await Promise.all(downloads.map(d => d.promise));
 
+        // Agrupa tipos ausentes por período
+        const ausentesPorPeriodo = {}; // chave = `${mes}/${ano}`, valor = array de nomes de tipos
+
         for (let j = 0; j < resultados.length; j++) {
           const pdfBytes = resultados[j];
+          const { mes, ano, tipo } = downloads[j];
+
           if (!pdfBytes || pdfBytes.byteLength === 0) {
-            const periodoAusente = downloads[j];
-            ausentes.push(`Matrícula: ${matricula} [Período ausente: ${periodoAusente.mes}/${periodoAusente.ano}]`);
+            const chave = `${mes}/${ano}`;
+            if (!ausentesPorPeriodo[chave]) ausentesPorPeriodo[chave] = [];
+            ausentesPorPeriodo[chave].push(nomesTipos[tipo]);
             continue;
           }
 
           const pdf = await PDFDocument.load(pdfBytes);
           const pages = await pdfFinal.copyPages(pdf, pdf.getPageIndices());
           pages.forEach(p => pdfFinal.addPage(p));
+        }
+
+        // Adiciona ao array ausentes agrupando tipos por período
+        for (const periodo in ausentesPorPeriodo) {
+          const tiposAusentes = ausentesPorPeriodo[periodo].join(', ');
+          ausentes.push(`Matrícula: ${matricula} [Período ausente: ${periodo}] - ${tiposAusentes}`);
         }
 
         const finalBytes = await pdfFinal.save();
@@ -243,49 +418,51 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (ausentes.length > 0) {
-        // criar alerta
-        const alerta = document.createElement('div');
-        alerta.textContent = '⚠️ Períodos não encontrados';
-        alerta.style = 'cursor:pointer; color:#e1b12c; font-weight:bold; margin-top:10px;';
-        document.body.insertBefore(alerta, document.getElementById('progresso').nextSibling);
+        // Salva os períodos ausentes no localStorage para persistência
+        localStorage.setItem('ausentes', JSON.stringify(ausentes));
 
-        // criar lista
-        const lista = document.createElement('div');
-        lista.style = 'border:1px solid #e1b12c; border-radius:6px; padding:5px; max-height:120px; overflow:auto; font-size:12px; background-color:#fffbe6; margin-top:5px; display:none; position:relative;';
-
-        const fechar = document.createElement('span');
-        fechar.textContent = '✖';
-        fechar.style = 'position:absolute; top:2px; right:5px; cursor:pointer; font-weight:bold;';
-        lista.appendChild(fechar);
-
-        const ul = document.createElement('ul');
-        ul.style = 'list-style:none; padding-left:5px; margin-top:15px;';
-        ausentes.forEach(a => {
-          const li = document.createElement('li');
-          li.textContent = a;
-          ul.appendChild(li);
-        });
-        lista.appendChild(ul);
-
-        document.body.insertBefore(lista, alerta.nextSibling);
-
-        // eventos
-        alerta.addEventListener('click', () => {
-          lista.style.display = lista.style.display === 'none' ? 'block' : 'none';
-        });
-        fechar.addEventListener('click', () => lista.style.display = 'none');
+        // Cria os alertas na tela usando a função já criada
+        criarAlertas(ausentes);
+      } else {
+        // Remove alertas antigos se não houver períodos ausentes
+        localStorage.removeItem('ausentes');
       }
 
-      mensagem.textContent = 'Contracheques baixados com sucesso!';
+      const textoSucesso = '✔️ Contracheques baixados com sucesso!';
+      mensagem.textContent = textoSucesso;
       mensagem.classList.remove('hidden');
+
+      // salva no localStorage para persistir
+      localStorage.setItem('mensagemSucesso', textoSucesso);
+
     } catch (e) {
-      erro.textContent = 'Ocorreu um erro: ' + (e.message || e);
+      erro.textContent = 'Ocorreu um erro ➡️ ' + (e.message || e);
       erro.classList.remove('hidden');
     } finally {
       setTimeout(() => {
         baixarBtn.disabled = false;
         progresso.style.opacity = '0';
       }, 1000);
+    }
+  });
+
+  // Carregar mensagem de sucesso salva
+  const mensagemSalva = localStorage.getItem('mensagemSucesso');
+  if (mensagemSalva) {
+    mensagem.textContent = mensagemSalva;
+    mensagem.classList.remove('hidden');
+  }
+
+  [addBtn, clearAllBtn, baixarBtn].forEach(btn => {
+    btn.addEventListener('click', () => {
+      limparAlertasEMensagem();
+    });
+  });
+
+  // Também ao remover uma matrícula individual
+  container.addEventListener('click', e => {
+    if (e.target.classList.contains('remove')) {
+      limparAlertasEMensagem();
     }
   });
 

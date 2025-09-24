@@ -15,8 +15,7 @@
 </head>
 
 <body>
-  <h3>PAYSLIP<svg width="16" height="16" viewBox="0 0 24 24"
-      style="vertical-align: super; fill: #273c75; stroke: #273c75; stroke-width: 2;">
+  <h3>PAYSLIP<svg width="16" height="16" viewBox="0 0 24 24">
       <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
     </svg></h3>
   <h4 id="subtitulo">BAIXAR CONTRACHEQUES</h4>
@@ -28,11 +27,13 @@
   <div id="matriculasContainer"></div>
 
   <label for="tipo">TIPO DE CONTRACHEQUE:</label>
-  <select id="tipo">
-    <option value="1">Meses Regulares (Janeiro a Dezembro)</option>
-    <option value="2">Meses Regulares + Adicionais (13º, férias, prêmios, etc.)</option>
-    <option value="3">Somente Adicionais (13°, férias, prêmios, etc.)</option>
-  </select>
+  <div class="select-wrapper">
+    <select id="tipo">
+      <option value="1">Meses Regulares (Janeiro a Dezembro)</option>
+      <option value="2">Meses Regulares + Adicionais (13º, férias, prêmios, etc.)</option>
+      <option value="3">Somente Adicionais (13°, férias, prêmios, etc.)</option>
+    </select>
+  </div>
 
   <button id="baixar">BAIXAR CONTRACHEQUES</button>
 
@@ -43,7 +44,7 @@
   <!-- <script src="scripts/content.js"></script> -->
   <script src="scripts/popup.js"></script>
   <div class="footer">
-    <p>Versão 3.0.1</p>
+    <p>Versão 3.1.1</p>
     <p>© 2025 David Linhares. Todos os direitos reservados.</p>
   </div>
 </body>

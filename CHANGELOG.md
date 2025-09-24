@@ -3,6 +3,27 @@
 Todas as alterações notáveis neste projeto são documentadas neste arquivo.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/) e segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [3.1.1] - 24/09/2025
+### Adicionado
+- Descrição detalhada para os tipos de contracheques.
+- Ícones e cores diferenciadas na lista de alertas de períodos ausentes.
+
+### Ajustado
+- Melhorias no layout geral da extensão.
+- Eventos de remoção de alertas e mensagem de sucesso atualizados.
+- Lista de alertas agora agrupa períodos contíguos.
+
+---
+
+## [3.0.2] - 24/09/2025
+### Adicionado
+- Seta no input do tipo de contracheque.
+
+### Ajustado
+- Alteração das cores para adquação com o tema dark dos texto, input, botões, svg, etc.
+
+---
+
 ## [3.0.1] - 24/09/2025
 ### Adicionado
 - Alerta visual para períodos ausentes de contracheques, com lista detalhada de matrícula e período.
