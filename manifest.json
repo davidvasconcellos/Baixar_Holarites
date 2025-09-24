@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Baixar Contracheques",
+  "name": "PaySlip Plus",
   "description": "Extensão para baixar contracheques com agrupamento automático de PDF.",
-  "version": "2.0.19",
+  "version": "2.0.20",
   "author": "David Vasconcellos",
   "icons": {
     "128": "icon1.png"

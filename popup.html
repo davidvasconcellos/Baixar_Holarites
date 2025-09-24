@@ -8,7 +8,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Baixar Contracheques</title>
+  <title>PaySlip Plus - Contracheques</title>
   <style>
     * {
       box-sizing: border-box;
@@ -30,10 +30,11 @@
 
     h3 {
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 5px;
       color: var(--primary-color, #273c75);
       font-size: 21px;
     }
+
 
     label {
       font-weight: bold;
@@ -141,6 +142,14 @@
       background-color: #f70000;
     }
 
+    #subtitulo {
+      text-align: center;
+      margin-bottom: 5px;
+      color: var(--primary-color, #273c75);
+      font-size: 12px;
+      font-weight: bold;
+    }
+
     #mensagem {
       margin-top: 10px;
       color: #44bd32;
@@ -188,8 +197,11 @@
 </head>
 
 <body>
-  <h3>BAIXAR CONTRACHEQUES</h3>
-
+  <h3>PAYSLIP<svg width="16" height="16" viewBox="0 0 24 24"
+      style="vertical-align: super; fill: #273c75; stroke: #273c75; stroke-width: 2;">
+      <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
+    </svg></h3>
+  <H4 id="subtitulo">BAIXAR CONTRACHEQUES</H4>
   <div id="temaToggle" title="Alternar tema"
     style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 16px; user-select: none;">🌙</div>
   <button id="addMatricula">ADICIONAR MATRÍCULA</button>
@@ -213,7 +225,7 @@
   <script src="pdf-lib.min.js"></script>
   <script src="popup.js"></script>
   <div class="footer">
-    <p>Versão 2.0.19</p>
+    <p>Versão 2.0.20</p>
     <p>© 2025 David Linhares. Todos os direitos reservados.</p>
   </div>
 </body>
