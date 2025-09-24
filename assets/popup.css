@@ -1,0 +1,184 @@
+/* Estilos gerais */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 380px;
+    padding: 20px;
+    background-color: var(--bg-color, #f5f6fa);
+    color: var(--text-color, #2f3640);
+    position: relative;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 5px;
+    color: var(--primary-color, #273c75);
+    font-size: 21px;
+}
+
+
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+input,
+select,
+button {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #dcdde1;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #4cd137;
+    box-shadow: 0 0 5px rgba(76, 209, 55, 0.5);
+}
+
+button {
+    background-color: #487eb0;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover:enabled {
+    background-color: #40739e;
+}
+
+button:disabled {
+    background-color: #7f8fa6;
+    cursor: not-allowed;
+    color: #dcdde1;
+}
+
+#addMatricula {
+    background-color: #44bd32;
+    margin-bottom: 10px;
+}
+
+#addMatricula:hover {
+    background-color: #4cd137;
+}
+
+#clearAllBtn {
+    background-color: #df2d09;
+    margin-bottom: 10px;
+}
+
+#clearAllBtn:hover {
+    background-color: #c01505;
+}
+
+.matricula-box {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #dcdde1;
+    border-radius: 6px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.3s forwards;
+}
+
+.matricula-box.remover {
+    animation: fadeOutDown 0.3s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutDown {
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+.matricula-box button.remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: auto;
+    padding: 2px 6px;
+    background-color: #e84118;
+    font-size: 12px;
+}
+
+.matricula-box button.remove:hover {
+    background-color: #f70000;
+}
+
+#subtitulo {
+    text-align: center;
+    margin-bottom: 5px;
+    color: var(--primary-color, #273c75);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#mensagem {
+    margin-top: 10px;
+    color: #44bd32;
+    font-weight: bold;
+}
+
+#erro {
+    margin-top: 10px;
+    color: #e84118;
+    font-weight: bold;
+}
+
+#progresso {
+    height: 6px;
+    background: #487eb0;
+    width: 0%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    margin-top: 10px;
+    opacity: 0;
+}
+
+/* Tema escuro */
+body.dark {
+    --bg-color: #2f3640;
+    --text-color: #f5f6fa;
+    --primary-color: #4cd137;
+}
+
+#temaToggle:hover {
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.footer {
+    font-size: 11px;
+    color: #555;
+    text-align: center;
+    margin-top: 10px;
+    padding: 4px 2px;
+    border-top: 2px solid #ddd;
+    border-radius: 0 0 6px 6px;
+}

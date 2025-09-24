@@ -57,4 +57,4 @@ Extensão do Google Chrome para **baixar contracheques de forma prática e autom
 © 2025 David Vasconcellos. Todos os direitos reservados.  
 Permissão apenas para uso pessoal. **Não é permitido modificar ou redistribuir** este código sem autorização do autor.
 
-**Versão:** 2.0.19 – 24/09/2025
+**Versão:** 3.0.1 – 24/09/2025
