@@ -167,6 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
     mensagem.classList.add('hidden');
     erro.classList.add('hidden');
 
+    const ausentes = []; // array para armazenar períodos ausentes
+
     const blocos = container.querySelectorAll('.matricula-box');
     if (blocos.length === 0) {
       erro.textContent = 'Adicione pelo menos uma matrícula';
@@ -219,7 +221,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let j = 0; j < resultados.length; j++) {
           const pdfBytes = resultados[j];
-          if (!pdfBytes || pdfBytes.byteLength === 0) continue;
+          if (!pdfBytes || pdfBytes.byteLength === 0) {
+            const periodoAusente = downloads[j];
+            ausentes.push(`Matrícula: ${matricula} [Período ausente: ${periodoAusente.mes}/${periodoAusente.ano}]`);
+            continue;
+          }
 
           const pdf = await PDFDocument.load(pdfBytes);
           const pages = await pdfFinal.copyPages(pdf, pdf.getPageIndices());
@@ -236,7 +242,41 @@ document.addEventListener('DOMContentLoaded', () => {
         progresso.style.width = `${((i + 1) / blocos.length) * 100}%`;
       }
 
-      mensagem.textContent = 'Todos os PDFs finalizados com sucesso!';
+      if (ausentes.length > 0) {
+        // criar alerta
+        const alerta = document.createElement('div');
+        alerta.textContent = '⚠️ Períodos não encontrados';
+        alerta.style = 'cursor:pointer; color:#e1b12c; font-weight:bold; margin-top:10px;';
+        document.body.insertBefore(alerta, document.getElementById('progresso').nextSibling);
+
+        // criar lista
+        const lista = document.createElement('div');
+        lista.style = 'border:1px solid #e1b12c; border-radius:6px; padding:5px; max-height:120px; overflow:auto; font-size:12px; background-color:#fffbe6; margin-top:5px; display:none; position:relative;';
+
+        const fechar = document.createElement('span');
+        fechar.textContent = '✖';
+        fechar.style = 'position:absolute; top:2px; right:5px; cursor:pointer; font-weight:bold;';
+        lista.appendChild(fechar);
+
+        const ul = document.createElement('ul');
+        ul.style = 'list-style:none; padding-left:5px; margin-top:15px;';
+        ausentes.forEach(a => {
+          const li = document.createElement('li');
+          li.textContent = a;
+          ul.appendChild(li);
+        });
+        lista.appendChild(ul);
+
+        document.body.insertBefore(lista, alerta.nextSibling);
+
+        // eventos
+        alerta.addEventListener('click', () => {
+          lista.style.display = lista.style.display === 'none' ? 'block' : 'none';
+        });
+        fechar.addEventListener('click', () => lista.style.display = 'none');
+      }
+
+      mensagem.textContent = 'Contracheques baixados com sucesso!';
       mensagem.classList.remove('hidden');
     } catch (e) {
       erro.textContent = 'Ocorreu um erro: ' + (e.message || e);
