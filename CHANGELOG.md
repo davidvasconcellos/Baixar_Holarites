@@ -1,6 +1,6 @@
 # Changelog
 
-Todos os cambios notáveis neste projeto são documentados neste arquivo.  
+Todas as alterações notáveis neste projeto são documentadas neste arquivo.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/) e segue [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [3.0.1] - 24/09/2025
