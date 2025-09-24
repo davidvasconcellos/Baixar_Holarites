@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
   indicador.style.width = '15px';
   indicador.style.height = '15px';
   indicador.style.borderRadius = '50%';
-  indicador.style.position = 'fixed';
-  indicador.style.top = '10px';
+  indicador.style.position = 'absolute';
+  indicador.style.top = '15px';
   indicador.style.left = '10px';
   indicador.style.zIndex = '1000';
   document.body.appendChild(indicador);
