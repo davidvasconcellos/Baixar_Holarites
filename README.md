@@ -20,6 +20,7 @@ Extensão do Google Chrome para **baixar contracheques de forma prática e autom
 - **Botão para adicionar ou remover matrículas** de forma rápida.
 - **Barra de progresso animada** durante o download.
 - **Modo Escuro/Claro** para melhorar a interação do usuário final.
+- **Botão remover todas as matrículas** para facilitar a interação do usuário.
 
 ---
 
@@ -56,4 +57,4 @@ Extensão do Google Chrome para **baixar contracheques de forma prática e autom
 © 2025 David Vasconcellos. Todos os direitos reservados.  
 Permissão apenas para uso pessoal. **Não é permitido modificar ou redistribuir** este código sem autorização do autor.
 
-**Versão:** 2.0.17 – 19/08/2025
+**Versão:** 2.0.18 – 24/09/2025

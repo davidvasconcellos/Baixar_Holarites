@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const erro = document.getElementById('erro');
   const tipoSelect = document.getElementById('tipo');
   const addBtn = document.getElementById('addMatricula');
+  const clearAllBtn = document.getElementById('clearAllBtn');
   const progresso = document.getElementById('progresso');
   const temaToggle = document.getElementById('temaToggle');
 
@@ -118,6 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   addBtn.addEventListener('click', () => criarBloco());
+
+  clearAllBtn.addEventListener('click', () => {
+    // Remove todos os blocos de matrícula do container
+    container.innerHTML = '';
+
+    // Apaga o progresso salvo
+    localStorage.removeItem('progressoContracheque');
+  });
 
   // Funções auxiliares
   function parsePeriodo(str) {

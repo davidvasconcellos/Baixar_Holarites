@@ -82,11 +82,20 @@
 
     #addMatricula {
       background-color: #44bd32;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     #addMatricula:hover {
       background-color: #4cd137;
+    }
+
+    #clearAllBtn {
+      background-color: #df2d09;
+      margin-bottom: 10px;
+    }
+
+    #clearAllBtn:hover {
+      background-color: #c01505;
     }
 
     .matricula-box {
@@ -165,6 +174,16 @@
       opacity: 0.8;
       transition: opacity 0.2s;
     }
+
+    .footer {
+      font-size: 11px;
+      color: #555;
+      text-align: center;
+      margin-top: 15px;
+      padding: 8px 5px;
+      border-top: 1px solid #ddd;
+      border-radius: 0 0 6px 6px;
+    }
   </style>
 </head>
 
@@ -174,6 +193,7 @@
   <div id="temaToggle" title="Alternar tema"
     style="position: fixed; top: 10px; right: 15px; cursor: pointer; font-size: 16px; user-select: none;">🌙</div>
   <button id="addMatricula">ADICIONAR MATRÍCULA</button>
+  <button id="clearAllBtn">REMOVER TODAS AS MATRÍCULAS</button>
 
   <div id="matriculasContainer"></div>
 
@@ -192,6 +212,10 @@
 
   <script src="pdf-lib.min.js"></script>
   <script src="popup.js"></script>
+  <div class="footer">
+    <p>Versão 2.0.18</p>
+    <p>© 2025 David Linhares. Todos os direitos reservados.</p>
+  </div>
 </body>
 
 </html>
