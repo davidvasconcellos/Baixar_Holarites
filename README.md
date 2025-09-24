@@ -21,13 +21,14 @@ Extensão do Google Chrome para **baixar contracheques de forma prática e autom
 - **Barra de progresso animada** durante o download.
 - **Modo Escuro/Claro** para melhorar a interação do usuário final.
 - **Botão remover todas as matrículas** para facilitar a interação do usuário.
+- **Lista da contracheques ausentes** agrupada e organizada por cor e ícones.
 
 ---
 
 ## 🚀 Instalação
 
 1. Baixe o repositório:  
-   [Baixar como .zip](https://github.com/davidvasconcellos/Baixar_Holarites/archive/refs/heads/main.zip)
+   [Baixar como .zip](https://github.com/davidvasconcellos/PaySlip_Plus/archive/refs/heads/main.zip)
 2. Descompacte o arquivo `.zip` em um local de sua preferência.
 3. Abra o Google Chrome e vá em **Extensões > Gerenciar extensões**.
 4. Ative o **Modo de Desenvolvedor** no canto superior direito.
